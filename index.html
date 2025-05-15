@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Your Event Invite</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #c59d5f;
+      --primary-dark: #b0884b;
+      --bg: #f4f4f4;
+      --card: #fff;
+      --text: #2c2c2c;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 2rem; font-family: 'Open Sans', sans-serif; background: var(--bg); color: var(--text); }
+    .form-container { max-width: 720px; margin: auto; background: var(--card); padding: 2rem; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+    h1 { margin-bottom: 1.5rem; font-family: 'Playfair Display', serif; font-size: 2.5rem; text-align: center; }
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; margin-bottom: .5rem; font-weight: 600; }
+    select, input, textarea {
+      width: 100%; padding: .75rem 1rem; border: 1px solid #ddd; border-radius: 8px;
+      font-family: inherit; font-size: 1rem; transition: border-color .2s;
+    }
+    select:focus, input:focus, textarea:focus { outline: none; border-color: var(--primary); }
+    button[type="submit"], .invite-link {
+      display: inline-block; margin-top: 1rem; padding: .75rem 2rem; font-size: 1rem;
+      font-weight: 600; color: #fff; background: var(--primary); border: none; border-radius: 50px;
+      cursor: pointer; text-decoration: none; text-align: center; transition: background .2s, transform .1s;
+    }
+    button[type="submit"]:hover, .invite-link:hover { background: var(--primary-dark); transform: translateY(-2px); }
+    button[type="submit"]:active, .invite-link:active { transform: translateY(0); }
+    .hidden { display: none; }
+    .result { margin-top: 1.5rem; text-align: center; font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>Create Your Event Invite</h1>
+    <form id="eventForm">
+      <div class="form-group">
+        <label for="category">Event Category</label>
+        <select id="category" required>
+          <option value="">-- Select Category --</option>
+          <option value="social">Social & Personal</option>
+          <option value="corporate">Corporate & Professional</option>
+          <option value="educational">Educational</option>
+          <option value="cultural">Cultural & Entertainment</option>
+        </select>
+      </div>
+      <div class="form-group hidden" id="eventTypeGroup">
+        <label for="eventType">Event Type</label>
+        <select id="eventType" required></select>
+      </div>
+      <div class="form-group">
+        <label for="eventTitle">Title</label>
+        <input id="eventTitle" placeholder="e.g. Grand Gala Evening" required />
+      </div>
+      <div class="form-group">
+        <label for="eventSubtitle">Subtitle</label>
+        <input id="eventSubtitle" placeholder="e.g. A night of elegance & excitement" required />
+      </div>
+      <div class="form-group inline-flex">
+        <div style="flex:1; margin-right:.5rem;">
+          <label for="eventDate">Date</label>
+          <input type="date" id="eventDate" required />
+        </div>
+        <div style="flex:1; margin-left:.5rem;">
+          <label for="eventTime">Time</label>
+          <input id="eventTime" placeholder="e.g. 7:00 PM - Midnight" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="eventVenue">Venue</label>
+        <input id="eventVenue" placeholder="e.g. Crystal Ballroom" required />
+      </div>
+      <div class="form-group">
+        <label for="eventAddress">Address</label>
+        <textarea id="eventAddress" rows="2" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="dressCode">Dress Code</label>
+        <input id="dressCode" placeholder="e.g. Black Tie Formal" required />
+      </div>
+      <button type="submit">Generate Invite</button>
+    </form>
+    <div class="result hidden" id="linkContainer">
+      <p>Your invite is ready:</p>
+      <a href="#" class="invite-link" id="inviteLink">View Invitation</a>
+    </div>
+  </div>
+
+  <script>
+    const categoryMap = { social:['Birthday Party','Wedding Invitation','Engagement Ceremony'], corporate:['Conference','Business Meeting','Webinar'], educational:['Seminar','Hackathon','Science Fair'], cultural:['Concert','Theatre Play','Art Exhibition'] };
+    const cat=document.getElementById('category'), typeGroup=document.getElementById('eventTypeGroup'), typeSel=document.getElementById('eventType');
+    cat.addEventListener('change',()=>{ typeSel.innerHTML='<option value="">-- Select Event Type --</option>'; categoryMap[cat.value]?.forEach(t=> typeSel.add(new Option(t,t))); typeGroup.classList.toggle('hidden',!cat.value); });
+    document.getElementById('eventForm').addEventListener('submit',e=>{ e.preventDefault(); 
+    const params=new URLSearchParams(); 
+    ['category','eventType','eventTitle','eventSubtitle','eventDate','eventTime','eventVenue','eventAddress','dressCode'].forEach(id=>params.set(id,document.getElementById(id).value)); 
+    const url='template.html?'+params; 
+    document.getElementById('inviteLink').href=url; 
+    document.getElementById('linkContainer').classList.remove('hidden'); });
+  </script>
+</body>
+</html>

@@ -169,7 +169,7 @@
       e.preventDefault();
       const params = new URLSearchParams();
       ['category','eventType','eventTitle','eventSubtitle','eventDate','eventTime','eventVenue','eventAddress','dressCode'].forEach(id => params.set(id, document.getElementById(id).value));
-      const url = 'template.html?' + params;
+      const url = 'eventInvite.html?' + params;
 
       // Save to localStorage
       const invites = JSON.parse(localStorage.getItem('myInvites') || '[]');
@@ -185,6 +185,15 @@
 
       document.getElementById('inviteLink').href = url;
       document.getElementById('linkContainer').classList.remove('hidden');
+    });
+
+    // Set min date to today for eventDate input
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      document.getElementById('eventDate').min = `${yyyy}-${mm}-${dd}`;
     });
   </script>
 </body>
